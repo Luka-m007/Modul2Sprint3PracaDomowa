@@ -3,3 +3,19 @@
 	margin: 0;
 	padding: 0;
 }
+
+#root {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 20px;
+}
+
+body {
+	background-color: #141414;
+}
+
+h1 {
+	color: rgb(77, 171, 77);
+	margin-bottom: 20px;
+}

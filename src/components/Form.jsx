@@ -16,10 +16,11 @@ export const Form = () => {
 			<TitleForm>Preferencje kursu</TitleForm>
 			<WrapperRow>
 				<span>Wybierz formę nauki:</span>
-				<InputsForm type='radio' id='frontend' name='courseForm' />
-				<label htmlFor='frontend'>Frontend</label>
-				<InputsForm type='radio' id='backend' name='courseForm' />
-				<label htmlFor='backend'>Backend</label>
+				<InputsForm type='radio' name='courseForm' />
+				<label htmlFor='stationary'>Stacjonarna</label>
+				<InputsForm type='radio' id='stationary' name='courseForm' />
+				<label htmlFor='online'>Online</label>
+				<InputsForm type='radio' id='online' name='courseForm' />
 			</WrapperRow>
 			<WrapperColumn>
 				{technologies.map((tech, index) => (

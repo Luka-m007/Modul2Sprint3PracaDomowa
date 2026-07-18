@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 const Titile = styled.h2`
-	color: orange;
+	color: #ffad48;
 	font-size: 24px;
 `
 

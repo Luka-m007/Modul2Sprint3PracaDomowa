@@ -1,21 +1,24 @@
 import styled from 'styled-components'
 
+const Label = styled.label`
+	width: 100%;
+`
+
 const HiddenCheckbox = styled.input`
 	display: none;
 `
 
 const StyledCheckbox = styled.span`
-	color: ${({ active }) => (active ? '#4ea8ff' : '#999')};
-
-	font-weight: ${({ active }) => (active ? '700' : '400')};
+	display: block;
+	background: ${({ $active }) => ($active ? 'blue' : 'none')};
 	cursor: pointer;
 `
 
-export const TechnologySelectorForm = ({ active, children }) => {
+export const TechnologySelectorForm = ({ $active, children, onChange }) => {
 	return (
-		<label>
-			<HiddenCheckbox type='checkbox' checked={active} />
-			<StyledCheckbox active={active}>{children}</StyledCheckbox>
-		</label>
+		<Label>
+			<HiddenCheckbox type='checkbox' checked={$active} onChange={onChange} />
+			<StyledCheckbox $active={$active}>{children}</StyledCheckbox>
+		</Label>
 	)
 }

@@ -5,7 +5,7 @@ const WrapperDiv = styled.div`
 	flex-direction: column;
 	padding: 16px;
 	border-radius: 5px;
-	background-color: #3c3d3c;
+	background-color: #26292b;
 `
 
 export const Wrapper = ({ children }) => {

@@ -10,6 +10,7 @@ const schema = z.object({
 	lastName: z.string().min(3, { message: 'Nazwisko musi składać się conajmniej z 3 znaków' }),
 	email: z.string().email({ message: 'Nieprawidłowy adres email' }),
 	phoneNumber: z.string().min(9, { message: 'Numer telefonu musi składać się z 9 cyfr' }),
+	courseForm: z.enum(['Stacjonarny', 'Online']),
 	technologies: z.array(z.string()).min(1, { message: 'Wybierz przynajmniej jedną technologię' }),
 	cv: z.any().refine(files => ['image/jpeg', 'image/png'].includes(files?.[0]?.type), {
 		message: 'Musisz dodać załącznik jako zdjęcie.',
@@ -21,7 +22,7 @@ const defaultValues = {
 	lastName: '',
 	email: '',
 	phoneNumber: '',
-	courseForm: '',
+	courseForm: 'Online',
 	technologies: [],
 	cv: null,
 	experience: '',
@@ -29,12 +30,13 @@ const defaultValues = {
 
 console.log('defaultValues', defaultValues)
 
-export const Form = () => {
+export const Form = ({ onSubmitted }) => {
 	const {
 		register,
 		handleSubmit,
 		setValue,
 		watch,
+		control,
 		formState: { errors },
 	} = useForm({
 		resolver: zodResolver(schema),
@@ -45,6 +47,7 @@ export const Form = () => {
 	console.log('watch', watch())
 	console.log('register', register('firstName'))
 
+	const isExperienced = watch('experience')
 	const selectedTechnologies = watch('technologies')
 
 	const toggleTechnology = tech => {
@@ -56,7 +59,8 @@ export const Form = () => {
 	console.log('selectedTechnologies', selectedTechnologies)
 
 	const onSubmit = data => {
-		console.log(data)
+		onSubmitted(data)
+		console.log('data', data)
 	}
 
 	return (
@@ -76,9 +80,9 @@ export const Form = () => {
 			<TitleForm>Preferencje kursu</TitleForm>
 			<WrapperRow>
 				<span>Wybierz formę nauki:</span>
-				<InputsForm type='radio' id='stationary' name='courseForm' {...register('courseForm')} />
+				<InputsForm type='radio' id='stationary' name='courseForm' value='Stacjonarny' {...register('courseForm')} />
 				<label htmlFor='stationary'>Stacjonarna</label>
-				<InputsForm type='radio' id='online' name='courseForm' defaultChecked {...register('courseForm')} />
+				<InputsForm type='radio' id='online' name='courseForm' value='Online' {...register('courseForm')} />
 				<label htmlFor='online'>Online</label>
 			</WrapperRow>
 			<WrapperColumn>
@@ -99,6 +103,16 @@ export const Form = () => {
 				<ErrorMessage>{errors.cv?.message}</ErrorMessage>
 			</WrapperColumn>
 			<TitleForm>Doświadczenie w programowaniu</TitleForm>
+			<WrapperRow>
+				<InputsForm type='checkbox' id='experience' name='experience' {...register('experience')} />
+				<label htmlFor='experience'>Czy masz doświadczenie w programowaniu?</label>
+			</WrapperRow>
+			{isExperienced && (
+				<Button color='#00a97d' type='button'>
+					Dodaj doświadczenie
+				</Button>
+			)}
+
 			<Button type='submit'>Wyślij zgłoszenie</Button>
 		</form>
 	)

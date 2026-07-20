@@ -1,10 +1,11 @@
 import styled from 'styled-components'
 
-const Titile = styled.h2`
+const Title = styled.h2`
 	color: #ffad48;
 	font-size: 24px;
+	margin-top: ${({ $noMargin }) => ($noMargin ? '0' : '13px')};
 `
 
-export const TitleForm = ({ children }) => {
-	return <Titile>{children}</Titile>
+export const TitleForm = ({ children, $noMargin }) => {
+	return <Title $noMargin={$noMargin}>{children}</Title>
 }

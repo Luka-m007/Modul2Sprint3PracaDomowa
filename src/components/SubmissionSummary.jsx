@@ -35,7 +35,11 @@ export const SubmissionSummary = ({ data }) => {
 			<TitleForm>Doświadczenie w programowaniu:</TitleForm>
 			<Div>
 				<ul>
-					<Li>Tu będą jeszcze inne dane</Li>
+					{data.experienceEntries.map((el, index) => (
+						<Li key={index}>
+							Technologia: {el.technology} / poziom: {el.level}
+						</Li>
+					))}
 				</ul>
 			</Div>
 			<TitleForm>Preferencje kursu:</TitleForm>

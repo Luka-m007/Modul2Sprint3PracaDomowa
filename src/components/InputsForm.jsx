@@ -5,13 +5,14 @@ const Input = styled.input`
 	border-radius: 5px;
 	background-color: ${({ $noBgc }) => ($noBgc ? 'transparent' : '#3d4a5a')};
 	color: #ffffff;
-	margin: 10px 0;
+	/* margin: 16px 0; */
 	border: none;
+	margin: ${({ $margin }) => $margin || '16px 0'};
 `
 
-export const InputsForm = ({ $noBgc, children, ...rest }) => {
+export const InputsForm = ({ $noBgc, children, margin, ...rest }) => {
 	return (
-		<Input $noBgc={$noBgc} {...rest}>
+		<Input $noBgc={$noBgc} {...rest} margin={margin}>
 			{children}
 		</Input>
 	)

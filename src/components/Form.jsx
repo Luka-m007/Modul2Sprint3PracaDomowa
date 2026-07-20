@@ -1,21 +1,51 @@
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { InputsForm, TitleForm, WrapperRow, WrapperColumn, TechnologySelectorForm, Button, ErrorMessage } from './index'
+import styled from 'styled-components'
+import {
+	InputsForm,
+	TitleForm,
+	WrapperRow,
+	WrapperColumn,
+	Button,
+	ErrorMessage,
+	ExperienceEntryForm,
+	PersonalDataForm,
+	CoursePreferencesForm,
+} from './index'
+
+const TechnologiesWrapperRow = styled(WrapperRow)`
+	margin: 13px 0;
+`
 
 const technologies = ['React', 'Node.js', 'HTML', 'CSS', 'Next.js']
+const initialExperienceEntry = {
+	technology: 'JavaScript',
+	level: '1',
+}
 
-const schema = z.object({
-	firstName: z.string().min(3, { message: 'Imię musi składać się conajmniej z 3 znaków' }),
-	lastName: z.string().min(3, { message: 'Nazwisko musi składać się conajmniej z 3 znaków' }),
-	email: z.string().email({ message: 'Nieprawidłowy adres email' }),
-	phoneNumber: z.string().min(9, { message: 'Numer telefonu musi składać się z 9 cyfr' }),
-	courseForm: z.enum(['Stacjonarny', 'Online']),
-	technologies: z.array(z.string()).min(1, { message: 'Wybierz przynajmniej jedną technologię' }),
-	cv: z.any().refine(files => ['image/jpeg', 'image/png'].includes(files?.[0]?.type), {
-		message: 'Musisz dodać załącznik jako zdjęcie.',
-	}),
+const experienceSchema = z.object({
+	technology: z.string(),
+	level: z.string(),
 })
+const schema = z
+	.object({
+		firstName: z.string().min(3, { message: 'Imię musi składać się conajmniej z 3 znaków' }),
+		lastName: z.string().min(3, { message: 'Nazwisko musi składać się conajmniej z 3 znaków' }),
+		email: z.string().email({ message: 'Nieprawidłowy adres email' }),
+		phoneNumber: z.string().min(9, { message: 'Numer telefonu musi składać się z 9 cyfr' }),
+		courseForm: z.enum(['Stacjonarny', 'Online']),
+		technologies: z.array(z.string()).min(1, { message: 'Wybierz przynajmniej jedną technologię' }),
+		cv: z.any().refine(files => ['image/jpeg', 'image/png'].includes(files?.[0]?.type), {
+			message: 'Musisz dodać załącznik jako zdjęcie.',
+		}),
+		hasExperience: z.boolean(),
+		experienceEntries: z.array(experienceSchema),
+	})
+	.refine(data => !data.hasExperience || (data.experienceEntries.length ?? 0) > 0, {
+		message: 'Gdy zanaczono doświadczenie w programowaniu, lista doświadczeń nie może być pusta.',
+		path: ['experienceEntries'],
+	})
 
 const defaultValues = {
 	firstName: '',
@@ -25,7 +55,8 @@ const defaultValues = {
 	courseForm: 'Online',
 	technologies: [],
 	cv: null,
-	experience: '',
+	hasExperience: false,
+	experienceEntries: [],
 }
 
 console.log('defaultValues', defaultValues)
@@ -47,7 +78,9 @@ export const Form = ({ onSubmitted }) => {
 	console.log('watch', watch())
 	console.log('register', register('firstName'))
 
-	const isExperienced = watch('experience')
+	const { fields, append, remove } = useFieldArray({ name: 'experienceEntries', control })
+
+	const isExperienced = watch('hasExperience')
 	const selectedTechnologies = watch('technologies')
 
 	const toggleTechnology = tech => {
@@ -65,53 +98,35 @@ export const Form = ({ onSubmitted }) => {
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)}>
-			<TitleForm>Dane osobowe</TitleForm>
-			<WrapperColumn $noBgc={true}>
-				<InputsForm type='text' placeholder='Imię' name='firstName' {...register('firstName')} />
-				<ErrorMessage>{errors.firstName?.message}</ErrorMessage>
-				<InputsForm type='text' placeholder='Nazwisko' name='lastName' {...register('lastName')} />
-				<ErrorMessage>{errors.lastName?.message}</ErrorMessage>
-				<InputsForm type='email' placeholder='E-mail' name='email' {...register('email')} />
-				<ErrorMessage>{errors.email?.message}</ErrorMessage>
-				<InputsForm type='number' placeholder='Numer telefonu' name='phoneNumber' {...register('phoneNumber')} />
-				<ErrorMessage>{errors.phoneNumber?.message}</ErrorMessage>
-			</WrapperColumn>
-
-			<TitleForm>Preferencje kursu</TitleForm>
-			<WrapperRow>
-				<span>Wybierz formę nauki:</span>
-				<InputsForm type='radio' id='stationary' name='courseForm' value='Stacjonarny' {...register('courseForm')} />
-				<label htmlFor='stationary'>Stacjonarna</label>
-				<InputsForm type='radio' id='online' name='courseForm' value='Online' {...register('courseForm')} />
-				<label htmlFor='online'>Online</label>
-			</WrapperRow>
-			<WrapperColumn>
-				{technologies.map((tech, index) => (
-					<WrapperRow key={index} $noMargin={true}>
-						<TechnologySelectorForm
-							$active={selectedTechnologies.includes(tech)}
-							onChange={() => toggleTechnology(tech)}>
-							{tech}
-						</TechnologySelectorForm>
-					</WrapperRow>
-				))}
-			</WrapperColumn>
-			<ErrorMessage>{errors.technologies?.message}</ErrorMessage>
+			<PersonalDataForm register={register} errors={errors} />
+			<CoursePreferencesForm
+				register={register}
+				technologies={technologies}
+				selectedTechnologies={selectedTechnologies}
+				toggleTechnology={toggleTechnology}
+				errors={errors}
+			/>
 			<TitleForm>Dodaj swoje CV</TitleForm>
-			<WrapperColumn $noBgc={true}>
-				<InputsForm type='file' $noBgc={true} name='cv' {...register('cv')}></InputsForm>
+			<WrapperColumn $noBgc={true} $noMargin={true}>
+				<InputsForm type='file' $noBgc={true} name='cv' $margin='13px 0' {...register('cv')}></InputsForm>
 				<ErrorMessage>{errors.cv?.message}</ErrorMessage>
 			</WrapperColumn>
-			<TitleForm>Doświadczenie w programowaniu</TitleForm>
-			<WrapperRow>
-				<InputsForm type='checkbox' id='experience' name='experience' {...register('experience')} />
+			<TitleForm $noMargin={true}>Doświadczenie w programowaniu</TitleForm>
+			<TechnologiesWrapperRow>
+				<InputsForm type='checkbox' id='experience' {...register('hasExperience')} />
 				<label htmlFor='experience'>Czy masz doświadczenie w programowaniu?</label>
-			</WrapperRow>
-			{isExperienced && (
-				<Button color='#00a97d' type='button'>
-					Dodaj doświadczenie
-				</Button>
-			)}
+			</TechnologiesWrapperRow>
+			<WrapperColumn $noBgc={true} $noMargin={true}>
+				{isExperienced && (
+					<>
+						<Button color='#00a97d' type='button' onClick={() => append(initialExperienceEntry)}>
+							Dodaj doświadczenie
+						</Button>
+						<ErrorMessage>{errors.experienceEntries?.message}</ErrorMessage>
+						<ExperienceEntryForm fields={fields} register={register} remove={remove} />
+					</>
+				)}
+			</WrapperColumn>
 
 			<Button type='submit'>Wyślij zgłoszenie</Button>
 		</form>

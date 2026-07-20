@@ -10,6 +10,10 @@ const WrapperRowDiv = styled.div`
 	color: #ffffff;
 `
 
-export const WrapperRow = ({ children, $noMargin }) => {
-	return <WrapperRowDiv $noMargin={$noMargin}>{children}</WrapperRowDiv>
+export const WrapperRow = ({ className, children, $noMargin }) => {
+	return (
+		<WrapperRowDiv className={className} $noMargin={$noMargin}>
+			{children}
+		</WrapperRowDiv>
+	)
 }

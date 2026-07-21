@@ -59,8 +59,6 @@ const defaultValues = {
 	experienceEntries: [],
 }
 
-console.log('defaultValues', defaultValues)
-
 export const Form = ({ onSubmitted }) => {
 	const {
 		register,
@@ -74,10 +72,6 @@ export const Form = ({ onSubmitted }) => {
 		defaultValues,
 	})
 
-	console.log('errors', errors)
-	console.log('watch', watch())
-	console.log('register', register('firstName'))
-
 	const { fields, append, remove } = useFieldArray({ name: 'experienceEntries', control })
 
 	const isExperienced = watch('hasExperience')
@@ -89,11 +83,9 @@ export const Form = ({ onSubmitted }) => {
 			: [...selectedTechnologies, tech]
 		setValue('technologies', newTechnologies, { shouldValidate: true })
 	}
-	console.log('selectedTechnologies', selectedTechnologies)
 
 	const onSubmit = data => {
 		onSubmitted(data)
-		console.log('data', data)
 	}
 
 	return (

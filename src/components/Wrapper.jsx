@@ -6,6 +6,7 @@ const WrapperDiv = styled.div`
 	padding: 16px;
 	border-radius: 5px;
 	background-color: #26292b;
+	width: 550px;
 `
 
 export const Wrapper = ({ children }) => {

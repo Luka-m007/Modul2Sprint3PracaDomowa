@@ -3,17 +3,19 @@ import styled from 'styled-components'
 
 const P = styled.p`
 	color: #ffffff;
-	margin: 16px 0;
+	margin: 18px 0;
+	font-size: 18px;
 `
 const Div = styled.div`
-	/* margin: 16px 0; */
+	padding: 10px 20px;
 `
 
 const Li = styled.li`
 	color: #ffffff;
 	padding: 0;
-	margin: 0;
+	margin: 5px 0;
 	list-style-position: inside;
+	font-size: 18px;
 `
 
 const Img = styled.img`
@@ -22,28 +24,32 @@ const Img = styled.img`
 	margin: 16px 0;
 `
 
+const Ul = styled.ul`
+	margin: '18px 0';
+`
+
 export const SubmissionSummary = ({ data }) => {
 	return (
-		<>
+		<Div>
 			<TitleForm>Dane osobowe:</TitleForm>
-			<Div>
+			<div>
 				<P>Imię: {data.firstName}</P>
 				<P>Nazwisko: {data.lastName}</P>
 				<P>Email: {data.email}</P>
 				<P>Telefon: {data.phoneNumber}</P>
-			</Div>
+			</div>
 			<TitleForm>Doświadczenie w programowaniu:</TitleForm>
-			<Div>
-				<ul>
+			<div>
+				<Ul>
 					{data.experienceEntries.map((el, index) => (
 						<Li key={index}>
 							Technologia: {el.technology} / poziom: {el.level}
 						</Li>
 					))}
-				</ul>
-			</Div>
+				</Ul>
+			</div>
 			<TitleForm>Preferencje kursu:</TitleForm>
-			<Div>
+			<div>
 				<P>Typ kursu: {data.courseForm}</P>
 				<P>Preferowane technolgie:</P>
 				<ul>
@@ -51,9 +57,9 @@ export const SubmissionSummary = ({ data }) => {
 						<Li key={index}>{tech}</Li>
 					))}
 				</ul>
-			</Div>
+			</div>
 			<TitleForm>Curriculum vitae:</TitleForm>
 			<Img src={URL.createObjectURL(data.cv[0])} alt='CV' />
-		</>
+		</Div>
 	)
 }

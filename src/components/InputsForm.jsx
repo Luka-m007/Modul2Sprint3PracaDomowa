@@ -5,7 +5,6 @@ const Input = styled.input`
 	border-radius: 5px;
 	background-color: ${({ $noBgc }) => ($noBgc ? 'transparent' : '#3d4a5a')};
 	color: #ffffff;
-	/* margin: 16px 0; */
 	border: none;
 	margin: ${({ $margin }) => $margin || '16px 0'};
 `

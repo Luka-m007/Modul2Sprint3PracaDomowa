@@ -1,5 +1,4 @@
-import { Form } from './components/Form'
-import { Wrapper, MainTitle, SubmissionSummary } from './components/index.js'
+import { Wrapper, MainTitle, SubmissionSummary, Form } from './components/index.js'
 import { useState } from 'react'
 export function App() {
 	const [submittedData, setSubmittedData] = useState(null)
